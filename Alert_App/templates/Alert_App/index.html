@@ -3,8 +3,12 @@
 <!DOCTYPE html>
 <html>
 	<link rel="stylesheet" type="text/css" href="{% static 'Alert_App/style.css' %}">
+	{% csrf_token %}
 	<p>{{ user.is_supervisor_user }}</p>
 	<p>{{ user_type }}</p>
+	{% if user.is_authenticated %}
+		<p>AUTH</p>
+	{% endif %}
 	{% if user.is_authenticated %}
 		<p>AUTH</p>
 	{% endif %}

@@ -4,7 +4,7 @@
 <html>
 	<link rel="stylesheet" type="text/css" href="{% static 'Alert_App/style.css' %}">
 	<p>{{ user_type }}</p>
-	{% if user_type %}
+	{% if user_type is None %}
 		
 		<button type="button">Reportings Map</button>	
 	{% endif %}

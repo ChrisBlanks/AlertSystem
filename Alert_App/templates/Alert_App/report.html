@@ -1,0 +1,16 @@
+{% load static %}
+<!-- static content is loaded -->
+<!DOCTYPE html>
+<html>
+	<link rel="stylesheet" type="text/css" href="{% static 'Alert_App/style.css' %}">
+	<p>{{ user_type }}</p>
+	{% if user_type %}
+		
+		<button type="button">Reportings Map</button>	
+	{% endif %}
+
+	<form method="post" action="{% url 'logout' %}">
+	{% csrf_token %}
+		<button type="submit">Finish</button>
+	</form>
+</html>

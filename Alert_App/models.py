@@ -1,5 +1,7 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractUser, User
+
 
 class Users(models.Model):
 	user = models.OneToOneField(User,on_delete=models.CASCADE)
@@ -11,4 +13,11 @@ class Users(models.Model):
 	
 	def get_is_authenticated(self):
 		"""Returns authentication value."""
-		return self.is_authenticated
+		return self.user.is_authenticated
+		
+
+def create_users(sender,instance,created,**kwargs):
+	if created:
+		Users.objects.create(user=instance)
+
+post_save.connect(create_users,sender=User)

@@ -7,13 +7,12 @@
 
 <h2>Login</h2>
 
-<form method="post">
+<form method="post" action="{% url 'AlertApp:index' %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <p>
-        <p>Device Id number:</p>
-    </p>
+    Device Id: <input type="text" name=id_number><br>
     <button type="submit">Login</button>
+	<input type="hidden" name="user_type" value= {{ user.is_supervisor_user }}>
 </form>
 
 {% endblock %}

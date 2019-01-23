@@ -4,22 +4,24 @@
 <html>
 	<link rel="stylesheet" type="text/css" href="{% static 'Alert_App/style.css' %}">
 	{% csrf_token %}
-	<p>{{ user.is_supervisor_user }}</p>
-	<p>{{ user_type }}</p>
+	<p>supervisor user:{{ user.users.is_supervisor_user }}</p>
+	<p>user_type is supervisor: {{ user_type }}</p>
 	{% if user.is_authenticated %}
-		<p>AUTH</p>
+		<p>AUTHENTICATED</p>
 	{% endif %}
-	{% if user.is_authenticated %}
-		<p>AUTH</p>
+	{% if isNotValidUser %}
+		<p>Not a valid user.</p>
+		<a href="{% url 'login' %}">Login</a>
+	{% else %}
+		{% if message %}
+		<!-- Can access passed dictionary values w/ bracket syntax -->
+				<p>{{ message }}</p>
+		{% endif %}
+		
+		<form method="post" action="{% url 'AlertApp:report' %}">
+		{% csrf_token %}
+			<button type="submit">Report Emergency</button>
+			<input type="hidden" name="user_type" value={{ user_type }}>
+		</form>
 	{% endif %}
-	{% if message %}
-	<!-- Can access passed dictionary values w/ bracket syntax -->
-			<p>{{ message }}</p>
-	{% endif %}
-	
-	<form method="post" action="{% url 'AlertApp:report' %}">
-	{% csrf_token %}
-		<button type="submit">Report Emergency</button>
-		<input type="hidden" name="user_type" value={{ user_type }}>
-	</form>
 </html>

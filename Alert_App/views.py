@@ -8,27 +8,33 @@ from django.http import Http404
 def index(request):
 	device_id = None
 	user_type = None
+	isNotValidUser = False
+	msg = ""
+	
 	if request.method == "POST":
 		username = request.POST.get('username',None)
 		print(username)
 		password = request.POST.get('password',None)
 		print(password)
-		user = authenticate(username=username,password=password)
-		print(user)
-		print(user.is_authenticated)
-		if user:
-			login(request,user)
-		device_id = request.POST.get('id_number',None)
-		user_type = user.users.is_supervisor_user
-		print(request.user.is_authenticated)
-		#print(request.user.is_supervisor_user)
+		
+		if request.user.is_authenticated:
+			pass #if user is already authenticated, skip 
+		else:
+			user = authenticate(username=username,password=password) #checks credentials against authentication backend
+			if user:
+				login(request,user) #if authenticated, login using database credentials
+				device_id = request.POST.get('id_number',None)
+				user_type = user.users.is_supervisor_user #get user type for later use in forms
+			else:
+				isNotValidUser = True #not a valid user
+				msg = msg + "Not a valid user. "
     
 	if device_id == None or device_id == "":
-		msg = "Logged in, but not using a registered device."
+		msg = msg + "Not using a registered device."
 	else:
-		msg = "Logged in with device: " + str(device_id)
+		msg = msg + "Logged in with device: " + str(device_id)
 		
-	context = {'message': msg,'user_type':user_type}
+	context = {'message': msg,'user_type':user_type,'isNotValidUser':isNotValidUser}
 	return render(request,'Alert_App/index.html', context)
 	
 

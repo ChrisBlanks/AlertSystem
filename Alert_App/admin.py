@@ -6,13 +6,15 @@ from Alert_App.models import Users
 
 
 class UsersInline(admin.StackedInline):
-    model = Users
-    can_delete = False
-    verbose_name_plural = "users"
+	"""Allows admin interface to edit the given model on the same page as the parent model."""
+	model = Users
+	can_delete = False
+	verbose_name_plural = "users"
 
 class UserAdmin(UserAdmin):
-    inlines = (UsersInline,)
+	"""Adds the Inline to the admin user """
+	inlines = (UsersInline,)
 
-admin.site.unregister(User)
-admin.site.register(Users)
-admin.site.register(User,UserAdmin)
+admin.site.unregister(User)  
+admin.site.register(Users)   #registers my custom model
+admin.site.register(User,UserAdmin) #reloads default models w/ my changes

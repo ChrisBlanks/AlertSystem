@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser, User
 
 
 class Users(models.Model):
+	"""Defines a model with custom attributes, which will be added to the base User class."""
 	user = models.OneToOneField(User,on_delete=models.CASCADE)
 	is_supervisor_user = models.BooleanField(default=False)
 	
@@ -17,7 +18,9 @@ class Users(models.Model):
 		
 
 def create_users(sender,instance,created,**kwargs):
+	""" """
 	if created:
 		Users.objects.create(user=instance)
 
 post_save.connect(create_users,sender=User)
+#the post_save signal sends the model instance that needs to be saved

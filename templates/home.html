@@ -7,9 +7,10 @@
 
 {% if user.is_authenticated %}
     Hello {{ user.username }}.
-    {% if user.username == 'admin'  %}
+    {% if user.is_superuser  %}
         <p><a href="{% url 'admin:index' %}">admin page</a></p>
 		<p><a href="{% url 'AlertApp:index' %}">Go to reporting page.</a></p>
+		<p><a href="{% url 'AlertApp:map' %}">Go to map page.</a></p>
     {% else %}
         <p><a href="{% url 'AlertApp:index' %}">Go to reporting page.</a></p>
     {% endif %}

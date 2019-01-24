@@ -1,8 +1,8 @@
-{% load static %}
-<!-- static content is loaded -->
-<!DOCTYPE html>
-<html>
-	<link rel="stylesheet" type="text/css" href="{% static 'Alert_App/style.css' %}">
+{% extends "Alert_App/AlertAppBase.html" %}
+
+{%  block title %}User Page{% endblock%}
+
+{% block content %}
 	{% csrf_token %}
 	<p>supervisor user:{{ user.users.is_supervisor_user }}</p>
 	<p>user_type is supervisor: {{ user_type }}</p>
@@ -24,4 +24,5 @@
 			<input type="hidden" name="user_type" value={{ user_type }}>
 		</form>
 	{% endif %}
-</html>
+	
+{% endblock %}

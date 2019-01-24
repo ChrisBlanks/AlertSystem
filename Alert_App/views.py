@@ -51,4 +51,9 @@ def report(request):
 	return render(request,'Alert_App/report.html',context)
 	
 
+def map(request):
+	"""Sets up view for map and markers."""
+	return render(request,'Alert_App/map.html')
+	
+
 

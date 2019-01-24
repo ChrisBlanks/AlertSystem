@@ -1,16 +1,18 @@
-{% load static %}
-<!-- static content is loaded -->
-<!DOCTYPE html>
-<html>
-	<link rel="stylesheet" type="text/css" href="{% static 'Alert_App/style.css' %}">
+{% extends "Alert_App/AlertAppBase.html" %}
+
+{%  block title %}Reporting Page{% endblock%}
+
+{% block content %}
 	<p>{{ user_type }}</p>
-	{% if user_type is None %}
-		
-		<button type="button">Reportings Map</button>	
+	{% if user_type %}
+		<form method="post" action="{% url 'AlertApp:map' %}">
+		{% csrf_token %}
+			<button type="submit">Reportings Map</button>
+		</form>
 	{% endif %}
 
 	<form method="post" action="{% url 'logout' %}">
 	{% csrf_token %}
 		<button type="submit">Finish</button>
 	</form>
-</html>
+{% endblock %}

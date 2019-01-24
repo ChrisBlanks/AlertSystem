@@ -8,6 +8,7 @@ urlpatterns = [
 	path('',TemplateView.as_view(template_name="home.html"),name="home"),
 	path('index/',views.index,name="index"),
 	path('report/',views.report,name="report"),
+	path('map/',views.map,name="map")
 ]
 
 # Potential page travel: Home > Login > Index > Report > Map > Home

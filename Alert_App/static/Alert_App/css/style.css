@@ -1,0 +1,19 @@
+/* CSS Styles for App */
+
+html{
+	font-size:20px;
+	background-color: lightblue;
+}
+
+body{
+	width: auto;
+	margin: 0 auto;
+	background-color: aliceblue;
+	border: 2px solid black;
+	padding: 0 20px 20px 20px;
+	text-align: center;
+}
+
+p,user_type, h2, label{
+    color: coral;
+}

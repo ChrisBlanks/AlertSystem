@@ -10,7 +10,27 @@
 			<button type="submit">Reportings Map</button>
 		</form>
 	{% endif %}
-
+	
+	<p>
+		<form method="post" action="{% url 'AlertApp:response' %}">
+		{% csrf_token %}
+			<button type="submit">School shooting!</button>
+			<input type="hidden" name="isSchoolShooting" value="shooter">
+		</form>
+		
+		<form method="post" action="{% url 'AlertApp:response' %}">
+		{% csrf_token %}
+			<button type="submit">Fire!</button>
+			<input type="hidden" name="isFire" value="fire">
+		</form>
+		
+		<form method="post" action="{% url 'AlertApp:response' %}">
+		{% csrf_token %}
+			<button type="submit">Injury!</button>
+			<input type="hidden" name="isInjury" value="injury">
+		</form>
+	</p>
+	
 	<form method="post" action="{% url 'logout' %}">
 	{% csrf_token %}
 		<button type="submit">Finish</button>

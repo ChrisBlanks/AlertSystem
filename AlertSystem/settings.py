@@ -124,6 +124,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Alert_App/static'),
 ]
 
+MEDIA_ROOT = ""
+MEDIA_URL = "/media/"
+
+
 LOGIN_REDIRECT_URL = "/AlertApp/"
 LOGOUT_REDIRECT_URL = "/AlertApp/"
 AUTH_PROFILE_MODULE = "AlertApp.Users"

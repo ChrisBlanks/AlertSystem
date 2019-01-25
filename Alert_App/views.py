@@ -5,6 +5,9 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponse,HttpResponseRedirect
 from django.http import Http404
 
+from Alert_App.sendSms import sendAlertToPolice
+
+
 def index(request):
 	device_id = None
 	user_type = None
@@ -54,6 +57,31 @@ def report(request):
 def map(request):
 	"""Sets up view for map and markers."""
 	return render(request,'Alert_App/map.html')
+	
+def response(request):
+	"""Loads the response view to the report view submission."""
+	report_type = None 
+	if request.method == "POST":
+		isShooter = request.POST.get('isSchoolShooting',None)
+		isFire = request.POST.get('isFire',None)
+		isInjury = request.POST.get('isInjury',None)
+		
+		if isShooter is not None:
+			report_type = isShooter
+		elif isFire is not None: 
+			report_type = isFire
+		elif isInjury is not None:
+			report_type = isInjury
+		else:
+			report_type = None
+	
+	if report_type == None:
+		return render(request,'Alert_App/response.html')
+	elif report_type == "shooter":
+		sendAlertToPolice()
+		
+	context = {'report_type':report_type}
+	return render(request,'Alert_App/response.html',context)
 	
 
 

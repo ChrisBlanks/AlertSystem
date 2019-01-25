@@ -4,5 +4,13 @@
 
 {% block content %}
 	<p>This is where the map goes.</p>
+	
+	{% load static %}
+	<img src="{%  static "Alert_App/images/school_map_example.jpg" %}" alt="Example of floor plan" style="width:500px;height:500px" >
+	
+	{% if user.is_superuser  %}
+		<!--Some javascript function for placing markers on  image. -->
+	{% endif %}
 	<button onclick="go_back()">Go Back</button>
+	
 {% endblock%}

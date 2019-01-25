@@ -1,3 +1,3 @@
 #get rid of all vim temporary files
 *~
-sendSms.py   #Contains twilio account info
+Alert_App/sendSms.py   #Contains twilio account info

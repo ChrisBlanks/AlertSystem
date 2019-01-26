@@ -17,3 +17,8 @@ body{
 p,user_type, h2, label{
     color: coral;
 }
+
+questionnaire{
+	color: red;
+	
+}

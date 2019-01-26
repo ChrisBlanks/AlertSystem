@@ -12,6 +12,7 @@ urlpatterns = [
 	path('report/',views.report,name="report"),
 	path('map/',views.map,name="map"),
 	path("response/",views.response,name="response"),
+	path("sentReport/",views.sendReport,name="sendReport"),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
 # Potential page travel: Home > Login > Index > Report > Map > Home

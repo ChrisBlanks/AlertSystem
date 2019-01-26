@@ -17,14 +17,14 @@
 		<!-- Can access passed dictionary values w/ bracket syntax -->
 				<p>{{ message }}</p>
 		{% endif %}
-	{% if user.is_superuser  %}
-		<a href="{% url 'AlertApp:home' %}">Go to Home page</a>
-	{% endif %}
 		<form method="post" action="{% url 'AlertApp:report' %}">
 		{% csrf_token %}
 			<button type="submit">Report Emergency</button>
 			<input type="hidden" name="user_type" value={{ user_type }}>
 		</form>
+		{% if user.is_superuser  %}
+			<a href="{% url 'AlertApp:home' %}">Go to Home page</a>
+		{% endif %}
 	{% endif %}
 	
 {% endblock %}

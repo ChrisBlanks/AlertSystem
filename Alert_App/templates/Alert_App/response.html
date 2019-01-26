@@ -3,8 +3,42 @@
 {%  block title %}Report Sent{% endblock%}
 
 {% block content %}
+	<input type="hidden" name="location" value="5" form="question_form" id="location_id">
+	<script>
+		var x = document.getElementById("location_id");
+		getLocation()
+	</script>
 	{% if report_type  %} 
 		<p>{{ report_type|upper }} REPORT has been sent. Stay calm and please wait for proper authority.</p>
+		
+		{%  if report_type == "shooter" %}
+			<form method="post" action="{% url 'AlertApp:sendReport' %}" id="question_form">
+			{% csrf_token %}
+				<p id="questionnaire">Please fill out the questionnaire.</p>
+				
+				<p id="questionnaire">Is the shooter near you?</p>
+				<select name="shooter_proximity" id="questionnaire">
+					<option value="The shooter is near me." id="questionnaire">The shooter is near me.</option>
+					<option value="The shooter is not near me." id="questionnaire">The shooter is not near me.</option>
+				</select>
+				
+				<p id="questionnaire">Are you with other people?</p>
+				<select name="alone_or_group">
+					<option value="I am alone." id="questionnaire">I am alone</option>
+					<option value="I am with other people." id="questionnaire">I am with other people.</option>
+				</select>
+				
+				<p id="questionnaire">Are there any injured people around you?</p>
+				<select name="any_injuries">
+					<option value="No injuries." id="questionnaire">No injuries.</option>
+					<option value="1 person injured." id="questionnaire">1 person is injured.</option>
+					<option value="Multiple people are injured." id="questionnaire">Multiple people are injured.</option>
+				</select>
+				
+				<input type="submit">
+			</form>
+		{% endif%}
+		
 		<p><a href="{% url 'logout' %}">logout</a></p>
 	{% else %}
 		<p>No report was submitted.</p>

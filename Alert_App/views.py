@@ -83,5 +83,28 @@ def response(request):
 	context = {'report_type':report_type}
 	return render(request,'Alert_App/response.html',context)
 	
+	
+def sendReport(request):
+	"""Sends questionnaire results to officer too."""
+	
+	if request.method == "POST":
+		shooter_proximity = request.POST.get('shooter_proximity',None)
+		alone_or_group = request.POST.get('alone_or_group',None)
+		any_injuries = request.POST.get('any_injuries',None)
+		location_str = request.POST.get('location',None)
+		
+		if (shooter_proximity is None) and (alone_or_group is None) and (any_injuries is None) :
+			print("No feedback.")
+		else:
+			msg_combination = f"Questionnaire for previous report: \n{shooter_proximity}\n{alone_or_group}\n{any_injuries}\n\n"
+			if location_str is not None:
+				print("Location is:"+location_str)
+				msg_combination = msg_combination + location_str
+				
+			sendAlertToPolice(default_msg=msg_combination )
+		
+	
+	return render(request, 'home.html')
+			
 
 

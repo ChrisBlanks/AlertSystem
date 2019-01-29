@@ -6,7 +6,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.http import Http404
 
 from Alert_App.sendSms import sendAlertToPolice
-
+import random 
 
 def index(request):
 	device_id = None
@@ -15,6 +15,7 @@ def index(request):
 	msg = ""
 	
 	if request.method == "POST":
+		print("post received")
 		username = request.POST.get('username',None)
 		print(username)
 		password = request.POST.get('password',None)
@@ -23,14 +24,26 @@ def index(request):
 		if request.user.is_authenticated:
 			pass #if user is already authenticated, skip 
 		else:
+				
 			user = authenticate(username=username,password=password) #checks credentials against authentication backend
 			if user:
 				login(request,user) #if authenticated, login using database credentials
 				device_id = request.POST.get('id_number',None)
+				if device_id is not None:
+					user.users.using_device_number = device_id
+					print("stored device number as:"+user.users.using_device_number)
 				user_type = user.users.is_supervisor_user #get user type for later use in forms
+				user.users.save()
+				user.save()
 			else:
 				isNotValidUser = True #not a valid user
 				msg = msg + "Not a valid user. "
+	else:
+		print("No post received")
+		print(request.user)
+		print(request.user.users.using_device_number)
+		if request.user.users.using_device_number is not -1:
+			device_id = request.user.users.using_device_number
     
 	if device_id == None or device_id == "":
 		msg = msg + "Not using a registered device."
@@ -78,7 +91,7 @@ def response(request):
 	if report_type == None:
 		return render(request,'Alert_App/response.html')
 	elif report_type == "shooter":
-		sendAlertToPolice()
+		sendAlertToPolice(request.user.users.using_device_number)
 		
 	context = {'report_type':report_type}
 	return render(request,'Alert_App/response.html',context)
@@ -101,7 +114,7 @@ def sendReport(request):
 				print("Location is:"+location_str)
 				msg_combination = msg_combination + location_str
 				
-			sendAlertToPolice(default_msg=msg_combination )
+			sendAlertToPolice(request.user.users.using_device_number,default_msg=msg_combination )
 		
 	
 	return render(request, 'home.html')

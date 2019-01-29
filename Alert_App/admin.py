@@ -9,7 +9,7 @@ class UsersInline(admin.StackedInline):
 	"""Allows admin interface to edit the given model on the same page as the parent model."""
 	model = Users
 	can_delete = False
-	verbose_name_plural = "users"
+	verbose_name_plural = "user"
 
 class UserAdmin(UserAdmin):
 	"""Adds the Inline to the admin user """

@@ -4,11 +4,11 @@
 
 {% block content %}
 	{% csrf_token %}
-	<p>supervisor user:{{ user.users.is_supervisor_user }}</p>
-	<p>user_type is supervisor: {{ user_type }}</p>
-	{% if user.is_authenticated %}
-		<p>AUTHENTICATED</p>
+	
+	{% if user.users.is_supervisor_user %}
+		<p>Supervisor user has logged in.</p>
 	{% endif %}
+	
 	{% if isNotValidUser %}
 		<p>Not a valid user.</p>
 		<a href="{% url 'login' %}">Login</a>

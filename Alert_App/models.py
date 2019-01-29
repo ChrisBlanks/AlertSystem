@@ -7,6 +7,7 @@ class Users(models.Model):
 	"""Defines a model with custom attributes, which will be added to the base User class."""
 	user = models.OneToOneField(User,on_delete=models.CASCADE)
 	is_supervisor_user = models.BooleanField(default=False)
+	using_device_number = models.IntegerField(default=-1)  #default is -1 to indicate that it hasn't been changed
 	
 	def get_supervisor_status(self):
 		"""Returns status of whether a user is a supervisor or not."""

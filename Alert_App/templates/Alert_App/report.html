@@ -3,7 +3,6 @@
 {%  block title %}Reporting Page{% endblock%}
 
 {% block content %}
-	<p>{{ user_type }}</p>
 	{% if user_type %}
 		<form method="post" action="{% url 'AlertApp:map' %}">
 		{% csrf_token %}

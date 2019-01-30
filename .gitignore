@@ -2,3 +2,4 @@
 *~
 Alert_App/sendSms.py
 #Contains twilio account info
+Alert_App/__pycache__/sendSms*

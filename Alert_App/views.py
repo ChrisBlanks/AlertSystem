@@ -1,21 +1,36 @@
+from django.contrib.auth import views as auth_views
 from django.shortcuts import render
 from django.contrib.auth import login
 from django.contrib.auth import authenticate
+
 
 from django.http import HttpResponse,HttpResponseRedirect
 from django.http import Http404
 
 from Alert_App.sendSms import sendAlertToPolice
+from Alert_App.models import Marker, DeviceId
+from AlertSystem import settings
 import random 
 
+
+def login_page(request):
+	ids = []
+	list_of_available_markers = Marker.objects.all()
+	print(list_of_available_markers)
+	for marker in list_of_available_markers:
+		ids.append(marker.deviceid.id_number)
+	context = {'device_ids':ids}
+	return render(request,"registration\login.html",context)
+
+	
 def index(request):
 	device_id = None
 	user_type = None
 	isNotValidUser = False
+	users_obj = None
 	msg = ""
 	
 	if request.method == "POST":
-		print("post received")
 		username = request.POST.get('username',None)
 		print(username)
 		password = request.POST.get('password',None)
@@ -26,14 +41,27 @@ def index(request):
 		else:
 				
 			user = authenticate(username=username,password=password) #checks credentials against authentication backend
+			
 			if user:
 				login(request,user) #if authenticated, login using database credentials
 				device_id = request.POST.get('id_number',None)
 				if device_id is not None:
-					user.users.using_device_number = device_id
-					print("stored device number as:"+user.users.using_device_number)
-				user_type = user.users.is_supervisor_user #get user type for later use in forms
-				user.users.save()
+					users_objs = request.user.users_set.filter(using_device_number__gt=-1)
+					
+					if len(users_objs) > 1:
+						users_obj = users_objs[0] #only one users object should be attached to a user object
+					elif len(users_objs) < 1:
+						raise Exception("No users objects attached to user ")
+					else:
+						users_obj = users_objs[0]   # list -> single object
+					
+					users_obj.using_device_number = device_id
+					print("stored device number as:"+users_obj.using_device_number)
+					
+				print(user)
+				user_type = users_obj.is_supervisor_user #get user type for later use in forms
+				print(user_type)
+				users_obj.save()
 				user.save()
 			else:
 				isNotValidUser = True #not a valid user
@@ -41,35 +69,61 @@ def index(request):
 	else:
 		print("No post received")
 		print(request.user)
-		print(request.user.users.using_device_number)
-		if request.user.users.using_device_number is not -1:
-			device_id = request.user.users.using_device_number
+		print(request.user.users_set.all())
+		print(dir(request.user.users_set))
+		users_objs = request.user.users_set.filter(using_device_number__gt=0)
+		
+		if len(users_objs) > 1:
+			users_obj = users_objs[0] #only one users object should be attached to a user object
+		elif len(users_objs) < 1:
+			raise Exception("No users objects attached to user ")
+		else:
+			users_obj = users_objs[0]   # list -> single object
+		
+		device_id = users_obj.using_device_number
     
-	if device_id == None or device_id == "":
+	list_of_available_markers = Marker.objects.all()
+	
+	isRegistered = False
+	
+	for marker in list_of_available_markers:
+		if str(device_id) in str(marker.deviceid.id_number):
+			isRegistered = True
+			break 
+	
+	if (device_id == None) or (device_id == "" ) or (isRegistered is False):
 		msg = msg + "Not using a registered device."
 	else:
 		msg = msg + "Logged in with device: " + str(device_id)
 		
-	context = {'message': msg,'user_type':user_type,'isNotValidUser':isNotValidUser}
+	context = {'message': msg,'user_type':user_type,'isNotValidUser':isNotValidUser,'users':users_obj}
 	return render(request,'Alert_App/index.html', context)
 	
 
 def report(request):
 	"""Sets up view for reporting emergencies."""
 	user_type = None 
-	print("Before POST check")
 	if request.method == "POST":
-		print("Post received.")
 		user_type = request.POST.get('user_type',None)
-		print("After POST")
-		print(user_type)
 	context = {'user_type':user_type}
 	return render(request,'Alert_App/report.html',context)
 	
 
 def map(request):
 	"""Sets up view for map and markers."""
-	return render(request,'Alert_App/map.html')
+	Markers_list = Marker.objects.all() #stores all of the markers in a list
+	marker_str = ""
+	for marker in Markers_list:
+		id = marker.deviceid.id_number
+		x_pos = marker.x_position
+		y_pos = marker.y_position
+		isAlerting = marker.isAlerting
+		
+		marker_str = marker_str + f"{id} {x_pos} {y_pos} {isAlerting}|"
+		print(marker_str)
+	
+	context = {'marker_str': marker_str}
+	return render(request,'Alert_App/map.html',context)
 	
 def response(request):
 	"""Loads the response view to the report view submission."""
@@ -91,7 +145,24 @@ def response(request):
 	if report_type == None:
 		return render(request,'Alert_App/response.html')
 	elif report_type == "shooter":
-		sendAlertToPolice(request.user.users.using_device_number)
+		users_objs = request.user.users_set.filter(using_device_number__gt=0)
+		
+		if len(users_objs) > 1:
+			users_obj = users_objs[0] #only one users object should be attached to a user object
+		elif len(users_objs) < 1:
+			raise Exception("No users objects attached to user ")
+		else:
+			users_obj = users_objs[0]   # list -> single object
+
+		id_to_set = users_obj.using_device_number
+		
+		list_of_available_markers = Marker.objects.all()
+		for marker in list_of_available_markers:
+			if str(id_to_set) == str(marker.deviceid.id_number):
+				marker.isAlerting = True
+				marker.save()
+		
+		sendAlertToPolice(id_to_set)
 		
 	context = {'report_type':report_type}
 	return render(request,'Alert_App/response.html',context)
@@ -113,8 +184,18 @@ def sendReport(request):
 			if location_str is not None:
 				print("Location is:"+location_str)
 				msg_combination = msg_combination + location_str
-				
-			sendAlertToPolice(request.user.users.using_device_number,default_msg=msg_combination )
+		
+			users_objs = request.user.users_set.filter(using_device_number__gte=0)
+			
+			if len(users_objs) > 1:
+				users_obj = users_objs[0] #only one users object should be attached to a user object
+			elif len(users_objs) < 1:
+				raise Exception("No users objects attached to user ")
+			else:
+				users_obj = users_objs[0]   # list -> single object
+
+			device_num = users_obj.using_device_number
+			sendAlertToPolice(device_num,default_msg=msg_combination,addLocation=True )
 		
 	
 	return render(request, 'home.html')

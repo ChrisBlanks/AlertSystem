@@ -5,13 +5,13 @@
 {% block content %}
 	{% csrf_token %}
 	
-	{% if user.users.is_supervisor_user %}
+	{% if users.is_supervisor_user %}
 		<p>Supervisor user has logged in.</p>
 	{% endif %}
 	
 	{% if isNotValidUser %}
 		<p>Not a valid user.</p>
-		<a href="{% url 'login' %}">Login</a>
+		<a href="{% url 'landing' %}">Login</a>
 	{% else %}
 		{% if message %}
 		<!-- Can access passed dictionary values w/ bracket syntax -->

@@ -6,37 +6,128 @@
 	<p>Building Map</p>
 	{% load static %}
 	<img src="{%  static "Alert_App/images/school_map_example.jpg" %}"
-	alt="Example of floor plan" style="width:500px;height:500px" id="map" ><br>
+	alt="Example of floor plan" style="width:500px;height:500px;display: none;" id="map" ><br>
 	
 	{% if user.is_superuser  %}
-		<input type="hidden" name="markers" id="data_store" value="" />
+		<input type="hidden" name="markers" id="data_store" value="{{ marker_str }}" />
 		<!--"Markers" hidden element stores marker information in this format:
-		<marker_number,x_position,y_position>                              -->
+		<device_id x_position y_position isAlerting|>                              -->
 		
-		<button type="button" onClick="allowEdits()" id="edit_button">Edit Registered Device Locations</button>
+		<button type="button" onClick="allowEdits()" id="edit_button" style="display:none;">Edit Registered Device Locations</button>
+		<!--edit button is hidden because editing will be done in the admin page instead  -->
 		<p align="center">
-			<canvas id="Canvas" height="600" width="600" style="display:none" align="right"></canvas>
+			<canvas id="Canvas" height="600" width="600" align="right"></canvas>
 		</p>
+		
 		<script>
+			window.onload = showMarkers;
+			function showMarkers(){
+				var map = document.getElementById("map");
+				var canvas = document.getElementById("Canvas");
+				
+				var data_store = document.getElementById("data_store");
+				var markers_string = data_store.value;  //this string contains information about the available markers
+				
+				// begin making markers 
+				var context = canvas.getContext("2d")
+				var mapSprite = new Image();
+				mapSprite.src = map.src;
+				
+				var Marker = function () {
+					this.Sprite = new Image();
+					this.Sprite.src = "http://www.clker.com/cliparts/w/O/e/P/x/i/map-marker-hi.png"
+					this.alert_sprite_src = "http://www.clker.com/cliparts/j/4/f/Y/g/Q/orange-pin-th.png" //sprite shown if isAlerting is true
+					this.Width = 12;
+					this.Height = 20;
+					this.XPos = 0;
+					this.YPos = 0;
+					this.id = "";
+					//this.isAlerting = ""; //empty strings are false when evaluated with Boolean()
+				}
+
+				// Array of markers
+				var Markers = new Array();
+				
+				// Format of data: "1 100 100|2 200 200"
+				var marker_list = markers_string.split("|");
+				var len = marker_list.length;
+				
+				for(i=0;i<len;i++){
+					var substring = marker_list[i];
+					var data = substring.split(" ");
+					
+					var marker = new Marker();
+					marker.id = data[0];
+					marker.XPos = data[1];
+					marker.YPos = data[2];
+					
+					if (data[3] == "True") { 
+						//marker.isAlerting = data[3];
+						marker.Sprite.src = marker.alert_sprite_src;
+					}
+					//default of empty string is kept if not true, which will evaluate to false
+					Markers.push(marker);
+				}
+				
+				var main = function () {
+					// Update our canvas
+					draw();
+				};
+				
+				var draw = function () {
+					// Clear Canvas
+					context.fillStyle = "#000";
+					context.fillRect(0, 0, canvas.width, canvas.height);
+					context.drawImage(mapSprite, 0, 0,canvas.width,canvas.height);
+					context.font = context.font.replace(/\d+px/, "15px");
+					// Draw markers
+					for (var i = 0; i < Markers.length; i++) {
+						var tempMarker = Markers[i];
+
+						context.drawImage(tempMarker.Sprite, tempMarker.XPos, tempMarker.YPos, tempMarker.Width, tempMarker.Height);
+						// Calculate position text
+						var markerText = "Device #" + (i +1); //+ " Position (X:" + tempMarker.XPos + ", Y:" + tempMarker.YPos + ")";
+						
+						// Draw a simple box so you can see the position
+						var textMeasurements = context.measureText(markerText);
+						context.fillStyle = "#666";
+						context.globalAlpha = 0.7;
+						context.fillRect(tempMarker.XPos - (textMeasurements.width / 2), tempMarker.YPos - 15, textMeasurements.width, 20);
+						context.globalAlpha = 1;
+
+						// Draw position above
+						context.fillStyle = "#F80606";
+						context.fillText(markerText, tempMarker.XPos, tempMarker.YPos);
+						context.textBaseline = "middle";
+						context.textAlign = "center";
+						
+					}
+					
+				}
+				setInterval(main, (1000 / 60)); // Refresh 60 times a second
+			}
+			
 			function cancelEdit(){
 				//resets page to initial elements and layout
-				var map = document.getElementById("map");
-				map.style.display = ""; //revert to original display
+				//var map = document.getElementById("map");
+				//map.style.display = ""; //revert to original display
 				
 				var edit_button = document.getElementById("edit_button");
 				edit_button.style.display = "";
 				
-				var canvas = document.getElementById("Canvas");
-				canvas.style.display = "none";  //revert to original display
+				//var canvas = document.getElementById("Canvas");
+				//canvas.style.display = "none";  //revert to original display
 				
 				var tmp = document.getElementById("cancel_button");
 				tmp.style.display = "none";
 				tmp.parentNode.removeChild(tmp)
+				
+				showMarkers();
 			}
 			function allowEdits(){
 				//displays canvas for adding new devices
 				var map = document.getElementById("map");
-				map.style.display = "none";
+				//map.style.display = "none";
 				
 				var edit_button = document.getElementById("edit_button");
 				edit_button.style.display = "none";
@@ -124,7 +215,7 @@
 						data_builder += "<"+ (i+1).toString() + ","+(tempMarker.XPos).toString()+ ","+tempMarker.YPos.toString() +">";
 						data_store.value = data_builder;
 						// Calculate position text
-						var markerText = "Device: " + (i +1); //+ " Position (X:" + tempMarker.XPos + ", Y:" + tempMarker.YPos + ")";
+						var markerText = "Device #" + (i +1); //+ " Position (X:" + tempMarker.XPos + ", Y:" + tempMarker.YPos + ")";
 						
 						// Draw a simple box so you can see the position
 						var textMeasurements = context.measureText(markerText);
@@ -138,9 +229,10 @@
 						context.fillText(markerText, tempMarker.XPos, tempMarker.YPos);
 					}
 				};
-
 				setInterval(main, (1000 / 60)); // Refresh 60 times a second
 			} 
+			
+			
 		</script>
 	{% endif %}
 	<button onclick="go_back()">Go Back</button>

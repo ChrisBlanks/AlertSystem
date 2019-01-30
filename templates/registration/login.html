@@ -9,10 +9,19 @@
 
 <form method="post" action="{% url 'AlertApp:index' %}">
     {% csrf_token %}
-    {{ form.as_p }}
 	<div>
-		<label for="id_number">Device Id:</label>
-		<input type="text" name=id_number id="id_number"><br>
+		<label for="username">Username:</label>
+		<input type="text" name=username id="username"><br>
+		
+		<label for="password">Password:</label>
+		<input type="password" name=password id="password"><br>
+		
+		<label for="device_id">Device Id:</label>
+		<select name="id_number" id="id_number">
+			{%  for id in device_ids %}
+				<option value="{{ id }}">{{ id }}</option>
+			{% endfor %}
+		</select>
     </div>
 	<button type="submit">Login</button>
 	<input type="hidden" name="user_type" value= {{ user.is_supervisor_user }}>

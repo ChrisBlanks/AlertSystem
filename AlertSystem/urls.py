@@ -8,6 +8,6 @@ urlpatterns = [
     path("user/",include("django.contrib.auth.urls") ),
     path('AlertApp/',include('Alert_App.urls'),name="AlertApp" ),
     path('admin/', admin.site.urls,name="admin"),
-	path("",RedirectView.as_view(url="AlertApp/")),
+	path("",RedirectView.as_view(url="AlertApp/"),name="landing"),
     ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

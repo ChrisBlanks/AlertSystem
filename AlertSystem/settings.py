@@ -30,14 +30,14 @@ ALLOWED_HOSTS = ['localhost','127.0.0.1','.ngrok.io']
 
 # Application definition
 
-INSTALLED_APPS = [
-    'Alert_App.apps.AlertAppConfig',    
+INSTALLED_APPS = [   
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'Alert_App.apps.AlertAppConfig', 
 ]
 
 MIDDLEWARE = [
@@ -127,7 +127,7 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = ""
 MEDIA_URL = "/media/"
 
-
+LOGIN_URL = "/user/login/"
 LOGIN_REDIRECT_URL = "/AlertApp/"
 LOGOUT_REDIRECT_URL = "/AlertApp/"
 AUTH_PROFILE_MODULE = "AlertApp.Users"

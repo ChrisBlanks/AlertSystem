@@ -17,7 +17,6 @@
     <p><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
     <p>Must enter login credentials.</p>
-	{% csrf_token %}
-    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'AlertApp:login_page' %}">Login</a>
 {% endif %}
 {% endblock %}

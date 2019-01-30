@@ -13,5 +13,5 @@ function showPosition(position) {
   x.innerHTML = "Latitude: " + position.coords.latitude + 
   "<br>Longitude: " + position.coords.longitude; 
   
-  x.value = "Latitude: " + position.coords.latitude + "\nLongitude: " + position.coords.longitude;
+  x.value = position.coords.latitude + "," + position.coords.longitude;
 }

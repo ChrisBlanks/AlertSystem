@@ -1,11 +1,11 @@
 /* CSS Styles for App */
 
-html{
+html {
 	font-size:20px;
 	background-color: lightblue;
 }
 
-body{
+body {
 	width: auto;
 	margin: 0 auto;
 	background-color: aliceblue;
@@ -14,14 +14,23 @@ body{
 	text-align: center;
 }
 
-p,user_type, h2, label{
+p, label {
     color: coral;
 }
+#user_type{
+	color: coral;
+}
 
-questionnaire{
+h1 {
+	color: coral;
+}
+#questionnaire {
 	color: red;
 	
 }
-Canvas{
+
+#Canvas {
 		text-align: center;
 }
+
+

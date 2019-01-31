@@ -1,35 +1,38 @@
 {% extends "Alert_App/AlertAppBase.html" %}
 
-{%  block title %}Reporting Page{% endblock%}
+{%  block title %}Hawkeyed Rescue{% endblock%}
+
+
 
 {% block content %}
+	<h1>Hawkeyed Report Page</h1>
 	{% if user_type %}
 		<form method="post" action="{% url 'AlertApp:map' %}">
 		{% csrf_token %}
 			<button type="submit">Reportings Map</button>
 		</form>
 	{% endif %}
-	
 	<p>
 		<form method="post" action="{% url 'AlertApp:response' %}">
 		{% csrf_token %}
 			<button type="submit">School shooting!</button>
 			<input type="hidden" name="isSchoolShooting" value="shooter">
 		</form>
-		
+	</p>
+	<p>
 		<form method="post" action="{% url 'AlertApp:response' %}">
 		{% csrf_token %}
 			<button type="submit">Fire!</button>
 			<input type="hidden" name="isFire" value="fire">
 		</form>
-		
+	</p>
+	<p>
 		<form method="post" action="{% url 'AlertApp:response' %}">
 		{% csrf_token %}
 			<button type="submit">Injury!</button>
 			<input type="hidden" name="isInjury" value="injury">
 		</form>
 	</p>
-	
 	<form method="post" action="{% url 'logout' %}">
 	{% csrf_token %}
 		<button type="submit">Finish</button>

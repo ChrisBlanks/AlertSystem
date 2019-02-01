@@ -4,29 +4,19 @@
 {% block title %}Hawkeyed Rescue{% endblock %}
 
 {% block content %}
-<<<<<<< HEAD
 <h1 id="main_msg">Home Page</h1>
-{% if user.is_authenticated %}
-    <p style="color: black;">Hello, {{ user.username }}.</p>
-=======
-<h1>Home Page</h1>
-{% if user.is_authenticated %}
-    <p>Hello, {{ user.username }}.</p>
->>>>>>> 420879ec5882bd49a692f89d0c00a98d825e4d34
-    {% if user.is_superuser  %}
-        <p><a href="{% url 'admin:index' %}">admin page</a></p>
-		<p><a href="{% url 'AlertApp:index' %}">Go to reporting page.</a></p>
-		<p><a href="{% url 'AlertApp:map' %}">Go to map page.</a></p>
-    {% else %}
-        <p><a href="{% url 'AlertApp:index' %}">Go to reporting page.</a></p>
-    {% endif %}
-    <p><a href="{% url 'logout' %}">logout</a></p>
-{% else %}
-<<<<<<< HEAD
-    <p style="color: black;">Must enter login credentials.</p>
-=======
-    <p>Must enter login credentials.</p>
->>>>>>> 420879ec5882bd49a692f89d0c00a98d825e4d34
-    <a href="{% url 'AlertApp:login_page' %}">Login</a>
-{% endif %}
+	{% if user.is_authenticated %}
+		<p style="color: black;">Hello, {{ user.username }}.</p>
+		{% if user.is_superuser  %}
+			<p><a href="{% url 'admin:index' %}">admin page</a></p>
+			<p><a href="{% url 'AlertApp:index' %}">Go to reporting page.</a></p>
+			<p><a href="{% url 'AlertApp:map' %}">Go to map page.</a></p>
+		{% else %}
+			<p><a href="{% url 'AlertApp:index' %}">Go to reporting page.</a></p>
+		{% endif %}
+		<p><a href="{% url 'logout' %}">logout</a></p>
+	{% else %}
+		<p style="color: black;">Must enter login credentials.</p>
+		<a href="{% url 'AlertApp:login_page' %}">Login</a>
+	{% endif %}
 {% endblock %}

@@ -8,11 +8,7 @@
 	<img src="{%  static "Alert_App/images/school_map_example.jpg" %}"
 	alt="Example of floor plan" style="width:500px;height:500px;display: none;" id="map" ><br>
 	
-<<<<<<< HEAD
 	{% if isAllowed == True  %}
-=======
-	{% if user.is_superuser  %}
->>>>>>> 420879ec5882bd49a692f89d0c00a98d825e4d34
 		<input type="hidden" name="markers" id="data_store" value="{{ marker_str }}" />
 		<!--"Markers" hidden element stores marker information in this format:
 		<device_id x_position y_position isAlerting|>                              -->

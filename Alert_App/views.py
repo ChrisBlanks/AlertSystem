@@ -121,6 +121,7 @@ def map(request):
 		
 		marker_str = marker_str + f"{id} {x_pos} {y_pos} {isAlerting}|"
 		print(marker_str)
+<<<<<<< HEAD
 
 	users_objs = request.user.users_set.filter(using_device_number__gt=-1)
 					
@@ -134,6 +135,10 @@ def map(request):
 	isAllowed = users_obj.is_supervisor_user
 	print(isAllowed)
 	context = {'marker_str': marker_str,'isAllowed':isAllowed}
+=======
+	
+	context = {'marker_str': marker_str}
+>>>>>>> 420879ec5882bd49a692f89d0c00a98d825e4d34
 	return render(request,'Alert_App/map.html',context)
 	
 def response(request):

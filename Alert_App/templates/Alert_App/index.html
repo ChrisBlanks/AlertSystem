@@ -7,16 +7,16 @@
 	{% csrf_token %}
 	
 	{% if users.is_supervisor_user %}
-		<p class="reg">Supervisor user has logged in.</p>
+		<p style="color: black;">Supervisor user has logged in.</p>
 	{% endif %}
 	
 	{% if isNotValidUser %}
-		<p class="reg">Not a valid user.</p>
+		<p style="color: red;">Not a valid user.</p>
 		<a href="{% url 'landing' %}">Login</a>
 	{% else %}
 		{% if message %}
 		<!-- Can access passed dictionary values w/ bracket syntax -->
-				<p>{{ message }}</p>
+				<p style="color: black;">{{ message }}</p>
 		{% endif %}
 		<form method="post" action="{% url 'AlertApp:report' %}">
 		{% csrf_token %}

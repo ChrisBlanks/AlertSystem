@@ -12,7 +12,7 @@
 		getLocation()
 	</script>
 	{% if report_type  %} 
-		<p>{{ report_type|upper }} REPORT has been sent. Stay calm and please wait for proper authority.</p>
+		<p style="color: black;">{{ report_type|upper }} REPORT has been sent. Stay calm and please wait for proper authority.</p>
 		
 		{%  if report_type == "shooter" %}
 			<form method="post" action="{% url 'AlertApp:sendReport' %}" id="question_form">
@@ -20,7 +20,7 @@
 				<p id="questionnaire">Please fill out the questionnaire.</p>
 				
 				<p id="questionnaire">Is the shooter near you?</p>
-				<select name="shooter_proximity" id="questionnaire">
+				<select name="shooter_proximity" id="questionnaire" style="color: black;">
 					<option value="The shooter is near me." id="questionnaire">The shooter is near me.</option>
 					<option value="The shooter is not near me." id="questionnaire">The shooter is not near me.</option>
 				</select>

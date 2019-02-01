@@ -4,9 +4,9 @@
 {% block title %}Hawkeyed Rescue{% endblock %}
 
 {% block content %}
-<h1>Home Page</h1>
+<h1 id="main_msg">Home Page</h1>
 {% if user.is_authenticated %}
-    <p>Hello, {{ user.username }}.</p>
+    <p style="color: black;">Hello, {{ user.username }}.</p>
     {% if user.is_superuser  %}
         <p><a href="{% url 'admin:index' %}">admin page</a></p>
 		<p><a href="{% url 'AlertApp:index' %}">Go to reporting page.</a></p>
@@ -16,7 +16,7 @@
     {% endif %}
     <p><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
-    <p>Must enter login credentials.</p>
+    <p style="color: black;">Must enter login credentials.</p>
     <a href="{% url 'AlertApp:login_page' %}">Login</a>
 {% endif %}
 {% endblock %}

@@ -121,8 +121,19 @@ def map(request):
 		
 		marker_str = marker_str + f"{id} {x_pos} {y_pos} {isAlerting}|"
 		print(marker_str)
-	
-	context = {'marker_str': marker_str}
+
+	users_objs = request.user.users_set.filter(using_device_number__gt=-1)
+					
+	if len(users_objs) > 1:
+		users_obj = users_objs[0] #only one users object should be attached to a user object
+	elif len(users_objs) < 1:
+		raise Exception("No users objects attached to user ")
+	else:
+		users_obj = users_objs[0]   # list -> single object
+					
+	isAllowed = users_obj.is_supervisor_user
+	print(isAllowed)
+	context = {'marker_str': marker_str,'isAllowed':isAllowed}
 	return render(request,'Alert_App/map.html',context)
 	
 def response(request):
